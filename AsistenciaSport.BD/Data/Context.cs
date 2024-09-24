@@ -11,8 +11,23 @@ namespace AsistenciaSport.BD.Data
     public class Context(DbContextOptions options) : DbContext(options)
     {
         public DbSet<Administrador> Administradores => Set<Administrador>();
-        public DbSet<Miembro> Miembros => Set<Miembro>();
         public DbSet<Asistencias> Asistencia => Set<Asistencias>();
         public DbSet<Cuotas> Cuotas => Set<Cuotas>();
+        public DbSet<Miembro> Miembros => Set<Miembro>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            var cascadeFKs = modelBuilder.Model.G­etEntityTypes()
+                                          .SelectMany(t => t.GetForeignKeys())
+                                          .Where(fk => !fk.IsOwnership
+                                                       && fk.DeleteBehavior == DeleteBehavior.Casca­de);
+            foreach (var fk in cascadeFKs)
+            {
+                fk.DeleteBehavior = DeleteBehavior.Restr­ict;
+            }
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

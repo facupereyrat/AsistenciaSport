@@ -4,6 +4,7 @@ using AsistenciaSport.BD.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AsistenciaSport.BD.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240924065825_ModificacionMensajesFuturoFront")]
+    partial class ModificacionMensajesFuturoFront
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,6 +94,9 @@ namespace AsistenciaSport.BD.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AdministradorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Estado")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -101,13 +107,12 @@ namespace AsistenciaSport.BD.Migrations
                     b.Property<int>("IdAdministrador")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdMiembro")
-                        .HasColumnType("int");
-
                     b.Property<int>("Monto")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AdministradorId");
 
                     b.ToTable("Cuotas");
                 });
@@ -161,10 +166,21 @@ namespace AsistenciaSport.BD.Migrations
                     b.HasOne("AsistenciaSport.BD.Data.Entity.Miembro", "Miembro")
                         .WithMany()
                         .HasForeignKey("MiembroId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Miembro");
+                });
+
+            modelBuilder.Entity("AsistenciaSport.BD.Data.Entity.Cuotas", b =>
+                {
+                    b.HasOne("AsistenciaSport.BD.Data.Entity.Administrador", "Administrador")
+                        .WithMany()
+                        .HasForeignKey("AdministradorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Administrador");
                 });
 
             modelBuilder.Entity("AsistenciaSport.BD.Data.Entity.Miembro", b =>
@@ -172,7 +188,7 @@ namespace AsistenciaSport.BD.Migrations
                     b.HasOne("AsistenciaSport.BD.Data.Entity.Administrador", "Administrador")
                         .WithMany()
                         .HasForeignKey("AdministradorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Administrador");

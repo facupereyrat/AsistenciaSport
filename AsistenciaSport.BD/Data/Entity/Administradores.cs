@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AsistenciaSport.BD.Data.Entity
 {
+
     public class Administrador
     {public int Id { get; set; }
         public string Nombre { get; set; }
