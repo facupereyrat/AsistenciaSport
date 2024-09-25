@@ -29,7 +29,7 @@ namespace AsistenciaSport.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Asistencias>> GetAsistencias(int id)
         {
-            var asistencias = await context.Asistencia.Include(a => a.Miembro).FindAsync(id);
+            var asistencias = await context.Asistencia.Include(a => a.Miembro).MinAsync();
 
             if (asistencias == null)
             {
